@@ -1,2 +1,2 @@
-from .dhcp import RTDhcpServer
+from .dhcp import RTDhcpClient, RTDhcpServer
 from .firewall import RTFireWall
