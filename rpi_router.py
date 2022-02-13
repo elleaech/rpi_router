@@ -1,10 +1,11 @@
+from pathlib import Path
 from router_data import *
 from router_cmd import *
 
 CLIENT = RTFile("wlan0")
 GATEWAY = RTFile("eth0")
 
-CONF_DIRECTORY = RTPath("etc/network/interfaces.d")
+CONF_DIRECTORY = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
 DHCP_CLIENT = RTDhcpClient()
 DHCP_SERVER = RTDhcpServer()
