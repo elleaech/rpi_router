@@ -1,10 +1,10 @@
 from router_data import *
 from router_cmd import *
 
-CLIENT = RTFile()
-GATEWAY = RTFile()
+CLIENT = RTFile("wlan0")
+GATEWAY = RTFile("eth0")
 
-CONF_DIRECTORY = RTPath()
+CONF_DIRECTORY = RTPath("etc/network/interfaces.d")
 
 DHCP_CLIENT = RTDhcpClient()
 DHCP_SERVER = RTDhcpServer()
