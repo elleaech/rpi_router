@@ -31,6 +31,7 @@ def set_dhcp_server() -> bool:
 
 
 def set_firewall() -> bool:
+    FIREWALL.install()
     FIREWALL.allow_dhcp_traffic()
     FIREWALL.enable_package_forwarding()
 
