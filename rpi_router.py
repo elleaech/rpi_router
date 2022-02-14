@@ -9,8 +9,8 @@ def set_network() -> bool:
     client_link = "wlan0"
     server_link = "eth0"
 
-    conf_directory.append(RTFile(None, client_link, True))
-    conf_directory.append(RTFile(None, server_link, False))
+    conf_directory.append(RTFile(RTIpAddress(), client_link, True))
+    conf_directory.append(RTFile(RTIpAddress(), server_link, False))
 
     conf_directory.go()
 
