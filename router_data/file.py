@@ -7,9 +7,10 @@ class RTFile:
         self._link_config = f"allow-hotplug {self._name}"
         self._interface = f"iface {self._name} inet static"
 
-        self._address = f"{addr.address}"
-        self._netmask = f"{addr.netmask}"
-        self._gateway = f"{addr.gateway}"
+        self._raw_address = addr
+        self._address = f"{self._raw_address.address}"
+        self._netmask = f"{self._raw_address.netmask}"
+        self._gateway = f"{self._raw_address.gateway}"
 
         self._wpa_config = ""
         if has_wpa:

@@ -4,9 +4,9 @@ SUCCESS = 0
 
 
 class RTDhcp:
-    def __init__(self) -> None:
+    def __init__(self, service_name: str) -> None:
         self._worker = Worker()
-        self._name: str = ""
+        self._name: str = service_name
 
 
 class RTDhcpServer(RTDhcp):
@@ -14,9 +14,8 @@ class RTDhcpServer(RTDhcp):
 
 
 class RTDhcpClient(RTDhcp):
-    def __init__(self) -> None:
-        super().__init__(self)
-        self._name = "dhcpcd"
+    def __init__(self, service_name: str) -> None:
+        super().__init__(self, service_name)
 
     def disable(self) -> bool:
         return_code = self._worker.disable(self._name)

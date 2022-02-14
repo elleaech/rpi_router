@@ -12,11 +12,13 @@ class RTPath:
         self._current_dir = self._original_dir
 
     def append(self, file: RTFile) -> None:
-        name = file.get_name()
-        self._files[name] = file
+        self._files[file.name] = file
 
-    def remove(self, file: str) -> None:
-        del self._files[file]
+    def remove(self, file_name: str) -> None:
+        del self._files[file_name]
+
+    def get_file(self, file_name: str) -> RTFile:
+        return self._files[file_name]
 
     def go(self) -> None:
         os.chdir(self._dir)
