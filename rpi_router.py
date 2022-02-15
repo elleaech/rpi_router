@@ -65,7 +65,7 @@ def set_dhcp_server(
     gateway_link_t: str,
 ) -> bool:
     if gateway_addr != None:
-        dhcp_server = RTDhcpServer("isc-dhcp-server", gateway_addr, gateway_link_t)
+        dhcp_server = RTDhcpServer(gateway_addr, gateway_link_t)
         dhcp_server.install()
         dhcp_server.enable()
         dhcp_server.configure()
@@ -102,7 +102,7 @@ def main() -> int:
     )
 
     if success:
-        dhcp_client = RTDhcpClient("dhcpcd")
+        dhcp_client = RTDhcpClient()
 
         if dhcp_client.disable():
             success: bool = set_dhcp_server(gateway_addr, cl_parameters.gateway_link_t)
