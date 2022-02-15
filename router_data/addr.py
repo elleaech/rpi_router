@@ -1,9 +1,9 @@
 class RTIpAddress:
     def __init__(self, f_byte: str, s_byte: str, t_byte: str, l_byte: str) -> None:
-        self.f_byte = f_byte
-        self.s_byte = s_byte
-        self.t_byte = t_byte
-        self.l_byte = l_byte
+        self._f_byte = f_byte
+        self._s_byte = s_byte
+        self._t_byte = t_byte
+        self._l_byte = l_byte
 
     @property
     def address(self) -> str:

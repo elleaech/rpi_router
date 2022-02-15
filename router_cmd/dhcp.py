@@ -15,7 +15,7 @@ class RTDhcpServer(RTDhcp):
 
 class RTDhcpClient(RTDhcp):
     def __init__(self, service_name: str) -> None:
-        super().__init__(self, service_name)
+        super().__init__(service_name)
 
     def disable(self) -> bool:
         return_code = self._worker.disable(self._name)
