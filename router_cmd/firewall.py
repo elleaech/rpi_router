@@ -1,4 +1,4 @@
-from router_cmd.worker import RTAPIDebian
+from router_cmd.os import RTAPIDebian
 
 SUCCESS = 0
 
