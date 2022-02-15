@@ -1,7 +1,7 @@
 import subprocess
 
 
-class Worker:
+class RTAPIDebian:
     def __init__(self) -> None:
         self._process = subprocess
 

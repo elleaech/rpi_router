@@ -1,4 +1,4 @@
-from router_cmd.worker import Worker
+from router_cmd.worker import RTAPIDebian
 
 SUCCESS = 0
 
@@ -7,7 +7,7 @@ class RTFireWall:
     def __init__(self) -> None:
         self._name = "firewalld"
         self._cmd = "firewall-cmd"
-        self._worker = Worker()
+        self._worker = RTAPIDebian()
 
     def install(self) -> bool:
         self._worker.install(self._name)

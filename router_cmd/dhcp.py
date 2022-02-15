@@ -1,11 +1,11 @@
-from router_cmd.worker import Worker
+from router_cmd.worker import RTAPIDebian
 
 SUCCESS = 0
 
 
 class RTDhcp:
     def __init__(self, service_name: str) -> None:
-        self._worker = Worker()
+        self._worker = RTAPIDebian()
         self._name: str = service_name
 
 
