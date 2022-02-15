@@ -19,38 +19,34 @@ def get_cl_parameters() -> argparse.Namespace:
     return args
 
 
+def init_address(addr_network_bytes: int, address_as_str: str):
+    parsed_address = address_as_str.split(".")
+
+    if len(parsed_address) >= 4:
+        address = RTIpAddress(
+            addr_network_bytes,
+            parsed_address[0],
+            parsed_address[1],
+            parsed_address[2],
+            parsed_address[3],
+        )
+        return address
+    else:
+        return None
+
+
 def set_network(
-    client_link_t,
-    gateway_link_t,
-    client_addr,
-    gateway_addr,
-    client_addr_network_bytes: int,
-    gateway_addr_network_bytes: int,
+    client_link_t: str,
+    gateway_link_t: str,
+    client_addr: RTIpAddress,
+    gateway_addr: RTIpAddress,
 ) -> bool:
-    conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
-    parsed_client_addr = client_addr.split(".")
-    parsed_gateway_addr = gateway_addr.split(".")
+    if client_addr != None and gateway_addr != None:
+        conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
-    if len(parsed_gateway_addr) >= 4 and len(parsed_client_addr) >= 4:
-        client_addr = RTIpAddress(
-            client_addr_network_bytes,
-            parsed_client_addr[0],
-            parsed_client_addr[1],
-            parsed_client_addr[2],
-            parsed_client_addr[3],
-        )
-
-        gateway_addr = RTIpAddress(
-            gateway_addr_network_bytes,
-            parsed_gateway_addr[0],
-            parsed_gateway_addr[1],
-            parsed_gateway_addr[2],
-            parsed_gateway_addr[3],
-        )
-
-        conf_directory.append(RTFile(client_addr, client_link_t, True))
-        conf_directory.append(RTFile(gateway_addr, gateway_link_t, False))
+        conf_directory.append(RTNetFile(client_addr, client_link_t, True))
+        conf_directory.append(RTNetFile(gateway_addr, gateway_link_t, False))
 
         conf_directory.go()
 
@@ -64,13 +60,19 @@ def set_network(
         return False
 
 
-def set_dhcp_server() -> bool:
-    dhcp_server = RTDhcpServer("isc-dhcp-server")
-    dhcp_server.install()
-    dhcp_server.enable()
-    dhcp_server.configure()
+def set_dhcp_server(
+    gateway_addr: RTIpAddress,
+    gateway_link_t: str,
+) -> bool:
+    if gateway_addr != None:
+        dhcp_server = RTDhcpServer("isc-dhcp-server", gateway_addr, gateway_link_t)
+        dhcp_server.install()
+        dhcp_server.enable()
+        dhcp_server.configure()
+        return True
 
-    return True
+    else:
+        return False
 
 
 def set_firewall() -> bool:
@@ -89,20 +91,21 @@ def main() -> int:
     except ValueError:
         raise ValueError
 
+    client_addr = init_address(client_addr_network_bytes, cl_parameters.client_addr)
+    gateway_addr = init_address(gateway_addr_network_bytes, cl_parameters.gateway_addr)
+
     success: bool = set_network(
         cl_parameters.client_link_t,
         cl_parameters.gateway_link_t,
-        cl_parameters.client_addr,
-        cl_parameters.gateway_addr,
-        client_addr_network_bytes,
-        gateway_addr_network_bytes,
+        client_addr,
+        gateway_addr,
     )
 
     if success:
         dhcp_client = RTDhcpClient("dhcpcd")
 
         if dhcp_client.disable():
-            success: bool = set_dhcp_server()
+            success: bool = set_dhcp_server(gateway_addr, cl_parameters.gateway_link_t)
 
             if success:
                 set_firewall()

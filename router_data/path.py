@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from router_data import RTFile
+from router_data import RTNetFile
 
 
 class RTPath:
@@ -11,13 +11,13 @@ class RTPath:
         self._original_dir = Path(os.getcwd())
         self._current_dir = self._original_dir
 
-    def append(self, file: RTFile) -> None:
+    def append(self, file: RTNetFile) -> None:
         self._files[file.name] = file
 
     def remove(self, file_name: str) -> None:
         del self._files[file_name]
 
-    def get_file(self, file_name: str) -> RTFile:
+    def get_file(self, file_name: str) -> RTNetFile:
         return self._files[file_name]
 
     def go(self) -> None:
