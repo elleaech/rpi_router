@@ -1,10 +1,14 @@
 from router_cmd.os import RTAPIDebian, SUCCESS
+from router_data.addr import RTIpv4Address
 
 
 class RTDhcpServer:
-    def __init__(self, service_name: str) -> None:
+    def __init__(self, gateway_addr: RTIpv4Address, gateway_link_t: str) -> None:
         self._worker = RTAPIDebian()
-        self._name: str = service_name
+        self._name: str = "isc-dhcp-server"
+
+        self._gateway_addr: RTIpv4Address = gateway_addr
+        self._gateway_link_t: str = gateway_link_t
 
     def install(self) -> bool:
         self._worker.install(self._name)
@@ -16,11 +20,48 @@ class RTDhcpServer:
         if SUCCESS == return_code:
             return True
 
+    def configure(self) -> None:
+        return_code = self._configure_dhcp_routing()
+        return_code = self._configure_dhcp_interface()
+
+        if SUCCESS == return_code:
+            return True
+
+    def _configure_dhcp_routing(self) -> int:
+        domain_options = "option domain-name 'rpi.local'\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
+
+        with open(f"/etc/dhcp/dhcpd.conf", "a") as dhcp_conf:
+            dhcp_conf.write(f"{domain_options}\n\n\n")
+            dhcp_conf.write(
+                f"subnet {self._gateway_addr.network} netmask {self._gateway_addr.netmask} "
+            )
+            dhcp_conf.write("{\n")
+            dhcp_conf.write(f"\toption routers {self._gateway_addr.gateway};\n")
+            dhcp_conf.write(f"\toption subnet-mask {self._gateway_addr.netmask};\n")
+            dhcp_conf.write("}\n")
+
+        return SUCCESS
+
+    def _configure_dhcp_interface(self) -> int:
+        file_name = "/etc/default/{self._name}"
+        dhcp_interface = open(file_name, "r")
+
+        new_lines = dhcp_interface.readlines()
+        index = new_lines.index('INTERFACESv4=""')
+        new_lines[index] = f'INTERFACESv4="{self._gateway_link_t}"'
+
+        dhcp_interface.close()
+
+        with open(file_name, "w") as dhcp_interface:
+            dhcp_interface.write(new_lines)
+
+        return SUCCESS
+
 
 class RTDhcpClient:
-    def __init__(self, service_name: str) -> None:
+    def __init__(self) -> None:
         self._worker = RTAPIDebian()
-        self._name: str = service_name
+        self._name: str = "dhcpcd"
 
     def disable(self) -> bool:
         return_code = self._worker.disable(self._name)
