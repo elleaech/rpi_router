@@ -1,21 +1,26 @@
-from router_cmd.os import RTAPIDebian
-
-SUCCESS = 0
+from router_cmd.os import RTAPIDebian, SUCCESS
 
 
-class RTDhcp:
+class RTDhcpServer:
     def __init__(self, service_name: str) -> None:
         self._worker = RTAPIDebian()
         self._name: str = service_name
 
+    def install(self) -> bool:
+        self._worker.install(self._name)
 
-class RTDhcpServer(RTDhcp):
-    pass
+    def enable(self) -> bool:
+        return_code = self._worker.enable(self._name)
+        return_code = self._worker.start(self._name)
+
+        if SUCCESS == return_code:
+            return True
 
 
-class RTDhcpClient(RTDhcp):
+class RTDhcpClient:
     def __init__(self, service_name: str) -> None:
-        super().__init__(service_name)
+        self._worker = RTAPIDebian()
+        self._name: str = service_name
 
     def disable(self) -> bool:
         return_code = self._worker.disable(self._name)

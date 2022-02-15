@@ -65,10 +65,12 @@ def set_network(
 
 
 def set_dhcp_server() -> bool:
-    dhcp_server = RTDhcpServer()
+    dhcp_server = RTDhcpServer("isc-dhcp-server")
     dhcp_server.install()
     dhcp_server.enable()
     dhcp_server.configure()
+
+    return True
 
 
 def set_firewall() -> bool:
