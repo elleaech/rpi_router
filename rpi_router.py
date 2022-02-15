@@ -17,7 +17,7 @@ def get_cl_parameters() -> argparse.Namespace:
     return args
 
 
-def set_network(client_link, server_link, client_addr, gateway_addr) -> bool:
+def set_network(client_link_t, gateway_link_t, client_addr, gateway_addr) -> bool:
     conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
     parsed_client_addr = client_addr.split(".")
@@ -38,13 +38,13 @@ def set_network(client_link, server_link, client_addr, gateway_addr) -> bool:
             parsed_gateway_addr[3],
         )
 
-        conf_directory.append(RTFile(client_addr, client_link, True))
-        conf_directory.append(RTFile(gateway_addr, server_link, False))
+        conf_directory.append(RTFile(client_addr, client_link_t, True))
+        conf_directory.append(RTFile(gateway_addr, gateway_link_t, False))
 
         conf_directory.go()
 
-        conf_directory.get_file(client_link).set_address()
-        conf_directory.get_file(server_link).set_address()
+        conf_directory.get_file(client_link_t).set_address()
+        conf_directory.get_file(gateway_link_t).set_address()
 
         conf_directory.goback()
 
@@ -70,9 +70,6 @@ def set_firewall() -> bool:
 def main() -> int:
     cl_parameters = get_cl_parameters()
 
-    dhcp_client = RTDhcpClient("dhcpcd")
-    dhcp_client.disable()
-
     success: bool = set_network(
         cl_parameters.client_link_t,
         cl_parameters.gateway_link_t,
@@ -81,10 +78,13 @@ def main() -> int:
     )
 
     if success:
-        success: bool = set_dhcp_server()
+        dhcp_client = RTDhcpClient("dhcpcd")
 
-        if success:
-            set_firewall()
+        if dhcp_client.disable():
+            success: bool = set_dhcp_server()
+
+            if success:
+                set_firewall()
 
 
 if __name__ == "__main__":
