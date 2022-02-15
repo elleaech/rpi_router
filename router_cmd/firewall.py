@@ -13,15 +13,13 @@ class RTFireWall:
         self._worker.install(self._name)
 
     def allow_dhcp_traffic(self) -> bool:
-        return_code = self._worker.do(
-            f"sudo {self._cmd} --add-service=dhcp --permanent"
-        )
+        return_code = self._worker.do(f"{self._cmd} --add-service=dhcp --permanent")
 
         if SUCCESS == return_code:
             return True
 
     def enable_package_forwarding(self) -> bool:
-        return_code = self._worker.do(f"sudo {self._cmd} --add-masquerade --permanent")
+        return_code = self._worker.do(f"{self._cmd} --add-masquerade --permanent")
 
         if SUCCESS == return_code:
             return True
