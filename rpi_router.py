@@ -1,23 +1,56 @@
+import argparse
 from pathlib import Path
 from router_data import *
 from router_cmd import *
 
 
-def set_network() -> bool:
+def get_cl_parameters() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("client_link_t", help="external link type")
+    parser.add_argument("client_addr", help="external ip address")
+    parser.add_argument("gateway_link_t", help="internal link type")
+    parser.add_argument("gateway_addr", help="internal gateway ip address")
+
+    args = parser.parse_args()
+
+    return args
+
+
+def set_network(client_link, server_link, client_addr, gateway_addr) -> bool:
     conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
-    client_link = "wlan0"
-    server_link = "eth0"
+    parsed_client_addr = client_addr.split(".")
+    parsed_gateway_addr = gateway_addr.split(".")
 
-    conf_directory.append(RTFile(RTIpAddress(), client_link, True))
-    conf_directory.append(RTFile(RTIpAddress(), server_link, False))
+    if len(parsed_gateway_addr) >= 4 and len(parsed_client_addr) >= 4:
+        client_addr = RTIpAddress(
+            parsed_client_addr[0],
+            parsed_client_addr[1],
+            parsed_client_addr[2],
+            parsed_client_addr[3],
+        )
 
-    conf_directory.go()
+        gateway_addr = RTIpAddress(
+            parsed_gateway_addr[0],
+            parsed_gateway_addr[1],
+            parsed_gateway_addr[2],
+            parsed_gateway_addr[3],
+        )
 
-    conf_directory.get_file(client_link).set_address()
-    conf_directory.get_file(server_link).set_address()
+        conf_directory.append(RTFile(client_addr, client_link, True))
+        conf_directory.append(RTFile(gateway_addr, server_link, False))
 
-    conf_directory.goback()
+        conf_directory.go()
+
+        conf_directory.get_file(client_link).set_address()
+        conf_directory.get_file(server_link).set_address()
+
+        conf_directory.goback()
+
+        return True
+    else:
+        return False
 
 
 def set_dhcp_server() -> bool:
@@ -35,10 +68,17 @@ def set_firewall() -> bool:
 
 
 def main() -> int:
+    cl_parameters = get_cl_parameters()
+
     dhcp_client = RTDhcpClient("dhcpcd")
     dhcp_client.disable()
 
-    success: bool = set_network()
+    success: bool = set_network(
+        cl_parameters.client_link_t,
+        cl_parameters.gateway_link_t,
+        cl_parameters.client_addr,
+        cl_parameters.gateway_addr,
+    )
 
     if success:
         success: bool = set_dhcp_server()
