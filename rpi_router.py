@@ -9,15 +9,24 @@ def get_cl_parameters() -> argparse.Namespace:
 
     parser.add_argument("client_link_t", help="external link type")
     parser.add_argument("client_addr", help="external ip address")
+    parser.add_argument("client_addr_network_bytes", help="netmask bytes number")
     parser.add_argument("gateway_link_t", help="internal link type")
     parser.add_argument("gateway_addr", help="internal gateway ip address")
+    parser.add_argument("gateway_addr_network_bytes", help="netmask bytes number")
 
     args = parser.parse_args()
 
     return args
 
 
-def set_network(client_link_t, gateway_link_t, client_addr, gateway_addr) -> bool:
+def set_network(
+    client_link_t,
+    gateway_link_t,
+    client_addr,
+    gateway_addr,
+    client_addr_network_bytes: int,
+    gateway_addr_network_bytes: int,
+) -> bool:
     conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
 
     parsed_client_addr = client_addr.split(".")
@@ -25,6 +34,7 @@ def set_network(client_link_t, gateway_link_t, client_addr, gateway_addr) -> boo
 
     if len(parsed_gateway_addr) >= 4 and len(parsed_client_addr) >= 4:
         client_addr = RTIpAddress(
+            client_addr_network_bytes,
             parsed_client_addr[0],
             parsed_client_addr[1],
             parsed_client_addr[2],
@@ -32,6 +42,7 @@ def set_network(client_link_t, gateway_link_t, client_addr, gateway_addr) -> boo
         )
 
         gateway_addr = RTIpAddress(
+            gateway_addr_network_bytes,
             parsed_gateway_addr[0],
             parsed_gateway_addr[1],
             parsed_gateway_addr[2],
@@ -70,11 +81,19 @@ def set_firewall() -> bool:
 def main() -> int:
     cl_parameters = get_cl_parameters()
 
+    try:
+        client_addr_network_bytes = int(cl_parameters.client_addr_network_bytes)
+        gateway_addr_network_bytes = int(cl_parameters.gateway_addr_network_bytes)
+    except ValueError:
+        raise ValueError
+
     success: bool = set_network(
         cl_parameters.client_link_t,
         cl_parameters.gateway_link_t,
         cl_parameters.client_addr,
         cl_parameters.gateway_addr,
+        client_addr_network_bytes,
+        gateway_addr_network_bytes,
     )
 
     if success:
