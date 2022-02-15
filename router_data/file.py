@@ -18,12 +18,12 @@ class RTFile:
 
     def set_address(self) -> None:
         with open(f"{self._name}", "w") as link_file:
-            link_file.write(self._link_config)
-            link_file.write(self._interface)
-            link_file.write(f"\t{self._address}")
-            link_file.write(f"\t{self._netmask}")
-            link_file.write(f"\t{self._gateway}")
-            link_file.write(f"\t{self._wpa_config}")
+            link_file.write(f"{self._link_config}\n")
+            link_file.write(f"{self._interface}\n")
+            link_file.write(f"\t{self._address}\n")
+            link_file.write(f"\t{self._netmask}\n")
+            link_file.write(f"\t{self._gateway}\n")
+            link_file.write(f"\t{self._wpa_config}\n")
 
     @property
     def name(self) -> str:

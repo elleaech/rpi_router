@@ -21,7 +21,12 @@ class RTPath:
         return self._files[file_name]
 
     def go(self) -> None:
-        os.chdir(self._dir)
+        try:
+            os.chdir(self._dir)
+        except FileNotFoundError:
+            os.mkdir(self._dir)
+            os.chdir(self._dir)
+
         self._current_dir = self._dir
 
     def goback(self) -> None:
