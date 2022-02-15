@@ -1,4 +1,4 @@
-class RTIpAddress:
+class RTIpv4Address:
     def __init__(self, netmask_bytes: int, *addr_byte: str) -> None:
         self._netmask_bytes = 0
         self._network_bytes = list()

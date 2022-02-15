@@ -1,8 +1,8 @@
-from router_data.addr import RTIpAddress
+from router_data.addr import RTIpv4Address
 
 
 class RTNetFile:
-    def __init__(self, addr: RTIpAddress, file_name: str, has_wpa: bool) -> None:
+    def __init__(self, addr: RTIpv4Address, file_name: str, has_wpa: bool) -> None:
         self._link_t = file_name
         self._link_config = f"allow-hotplug {self._link_t}"
         self._interface = f"iface {self._link_t} inet static"

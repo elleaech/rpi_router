@@ -23,7 +23,7 @@ def init_address(addr_network_bytes: int, address_as_str: str):
     parsed_address = address_as_str.split(".")
 
     if len(parsed_address) >= 4:
-        address = RTIpAddress(
+        address = RTIpv4Address(
             addr_network_bytes,
             parsed_address[0],
             parsed_address[1],
@@ -38,8 +38,8 @@ def init_address(addr_network_bytes: int, address_as_str: str):
 def set_network(
     client_link_t: str,
     gateway_link_t: str,
-    client_addr: RTIpAddress,
-    gateway_addr: RTIpAddress,
+    client_addr: RTIpv4Address,
+    gateway_addr: RTIpv4Address,
 ) -> bool:
 
     if client_addr != None and gateway_addr != None:
@@ -61,7 +61,7 @@ def set_network(
 
 
 def set_dhcp_server(
-    gateway_addr: RTIpAddress,
+    gateway_addr: RTIpv4Address,
     gateway_link_t: str,
 ) -> bool:
     if gateway_addr != None:
