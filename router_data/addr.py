@@ -2,7 +2,7 @@ class RTAddress:
     def __init__(self, netmask_bytes: int, *addr_byte: str) -> None:
         self._netmask_bytes = netmask_bytes
         self._network_bytes = list()
-        self._addr_bytes = addr_byte
+        self._addr_bytes = list()
 
     def _set_addr_bytes(self, *addr_byte: str):
         raise NotImplementedError

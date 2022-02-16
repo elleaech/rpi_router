@@ -24,7 +24,7 @@ class RTPath:
         try:
             os.chdir(self._dir)
         except FileNotFoundError:
-            os.mkdir(self._dir)
+            os.makedirs(self._dir, exist_ok=True)
             os.chdir(self._dir)
 
         self._current_dir = self._dir

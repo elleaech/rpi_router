@@ -43,17 +43,17 @@ class RTDhcpServer:
         return SUCCESS
 
     def _configure_dhcp_interface(self) -> int:
-        file_name = "/etc/default/{self._name}"
+        file_name = f"/etc/default/{self._name}"
         dhcp_interface = open(file_name, "r")
 
         new_lines = dhcp_interface.readlines()
-        index = new_lines.index('INTERFACESv4=""')
-        new_lines[index] = f'INTERFACESv4="{self._gateway_link_t}"'
+        index = new_lines.index('INTERFACESv4=""\n')
+        new_lines[index] = f'INTERFACESv4="{self._gateway_link_t}"\n'
 
         dhcp_interface.close()
 
         with open(file_name, "w") as dhcp_interface:
-            dhcp_interface.write(new_lines)
+            dhcp_interface.write("".join(new_lines))
 
         return SUCCESS
 
