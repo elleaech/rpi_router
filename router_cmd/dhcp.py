@@ -11,14 +11,15 @@ class RTDhcpServer:
         self._gateway_link_t: str = gateway_link_t
 
     def install(self) -> bool:
-        self._worker.install(self._name)
+        if SUCCESS == self._worker.install(self._name):
+            return True
+        return False
 
     def enable(self) -> bool:
-        return_code = self._worker.enable(self._name)
-        return_code = self._worker.start(self._name)
-
-        if SUCCESS == return_code:
-            return True
+        if SUCCESS == self._worker.enable(self._name):
+            if SUCCESS == self._worker.start(self._name):
+                return True
+        return False
 
     def configure(self) -> None:
         return_code = self._configure_dhcp_routing()
@@ -72,8 +73,7 @@ class RTDhcpClient:
         self._name: str = "dhcpcd"
 
     def disable(self) -> bool:
-        return_code = self._worker.disable(self._name)
-        return_code = self._worker.stop(self._name)
-
-        if SUCCESS == return_code:
-            return True
+        if SUCCESS == self._worker.disable(self._name):
+            if SUCCESS == self._worker.stop(self._name):
+                return True
+        return False

@@ -19,7 +19,6 @@ sudo python3 rpi_router.py --help
 ### Improvements
 
 - Algorithms
-- Return codes
 
 ### Portings
 

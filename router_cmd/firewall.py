@@ -8,16 +8,16 @@ class RTFireWall:
         self._worker = RTAPIDebian()
 
     def install(self) -> bool:
-        self._worker.install(self._name)
+        if SUCCESS == self._worker.install(self._name):
+            return True
+        return False
 
     def allow_dhcp_traffic(self) -> bool:
-        return_code = self._worker.do(f"{self._cmd} --add-service=dhcp --permanent")
-
-        if SUCCESS == return_code:
+        if SUCCESS == self._worker.do(f"{self._cmd} --add-service=dhcp --permanent"):
             return True
+        return False
 
     def enable_package_forwarding(self) -> bool:
-        return_code = self._worker.do(f"{self._cmd} --add-masquerade --permanent")
-
-        if SUCCESS == return_code:
+        if SUCCESS == self._worker.do(f"{self._cmd} --add-masquerade --permanent"):
             return True
+        return False

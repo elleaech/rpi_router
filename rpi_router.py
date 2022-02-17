@@ -66,10 +66,9 @@ def set_dhcp_server(
 ) -> bool:
     if gateway_addr != None:
         dhcp_server = RTDhcpServer(gateway_addr, gateway_link_t)
-        dhcp_server.install()
-        dhcp_server.enable()
-        dhcp_server.configure()
-        return True
+        return (
+            dhcp_server.install() and dhcp_server.enable() and dhcp_server.configure()
+        )
 
     else:
         return False
@@ -77,9 +76,12 @@ def set_dhcp_server(
 
 def set_firewall() -> bool:
     firewall = RTFireWall()
-    firewall.install()
-    firewall.allow_dhcp_traffic()
-    firewall.enable_package_forwarding()
+
+    return (
+        firewall.install()
+        and firewall.allow_dhcp_traffic()
+        and firewall.enable_package_forwarding()
+    )
 
 
 def main() -> int:

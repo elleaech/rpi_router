@@ -32,25 +32,20 @@ class RTAPIDebian(RTAPIOS):
         super().__init__()
 
     def do(self, command: str) -> int:
-        self._process.run(command, shell=True)
-        return SUCCESS
+        rc = self._process.run(command, shell=True, capture_outpsut=True)
+        return rc.returncode
 
     def install(self, package: str) -> int:
-        self.do(f"apt-get -y install {package}")
-        return SUCCESS
+        return self.do(f"apt-get -y install {package}")
 
     def disable(self, service: str) -> int:
-        self.do(f"systemctl disable {service}")
-        return SUCCESS
+        return self.do(f"systemctl disable {service}")
 
     def enable(self, service: str) -> int:
-        self.do(f"systemctl enable {service}")
-        return SUCCESS
+        return self.do(f"systemctl enable {service}")
 
     def start(self, service: str) -> int:
-        self.do(f"systemctl start {service}")
-        return SUCCESS
+        return self.do(f"systemctl start {service}")
 
     def stop(self, service: str) -> int:
-        self.do(f"systemctl stop {service}")
-        return SUCCESS
+        return self.do(f"systemctl stop {service}")
