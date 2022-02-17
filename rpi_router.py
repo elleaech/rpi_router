@@ -85,6 +85,9 @@ def set_firewall() -> bool:
 def main() -> int:
     cl_parameters = get_cl_parameters()
 
+    if cl_parameters.client_link_t == cl_parameters.gateway_link_t:
+        print("link_t cannot be equal!")
+
     try:
         client_addr_network_bytes = int(cl_parameters.client_addr_network_bytes)
         gateway_addr_network_bytes = int(cl_parameters.gateway_addr_network_bytes)
