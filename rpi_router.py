@@ -19,7 +19,24 @@ def get_cl_parameters() -> argparse.Namespace:
     return args
 
 
+def print_cl_parameters(cl_parameters: argparse.Namespace):
+    log("-" * 50)
+    log(f"CLIENT LINK TYPE: {cl_parameters.client_link_t}")
+    log(f"CLIENT ADDRESS: {cl_parameters.client_addr}")
+    log(f"CLIENT NETMASK BYTES: {cl_parameters.client_addr_network_bytes}")
+    log(f"GATEWAY LINK TYPE: {cl_parameters.gateway_link_t}")
+    log(f"GATEWAY ADDRESS: {cl_parameters.gateway_addr}")
+    log(f"GATEWAY NETMASK BYTES: {cl_parameters.gateway_addr_network_bytes}")
+    log("-" * 50)
+
+
+def log(message):
+    print(message, "\n")
+
+
 def init_address(addr_network_bytes: int, address_as_str: str):
+    log("SETTING ADDRESS:")
+
     parsed_address = address_as_str.split(".")
 
     if len(parsed_address) >= 4:
@@ -30,6 +47,8 @@ def init_address(addr_network_bytes: int, address_as_str: str):
             parsed_address[2],
             parsed_address[3],
         )
+
+        log(address.address)
         return address
     else:
         return None
@@ -41,6 +60,7 @@ def set_network(
     client_addr: RTIpv4Address,
     gateway_addr: RTIpv4Address,
 ) -> bool:
+    log("SETTING NETWORK INTERFACES:")
 
     if client_addr != None and gateway_addr != None:
         conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
@@ -51,7 +71,9 @@ def set_network(
         conf_directory.go()
 
         conf_directory.get_file(client_link_t).set_address()
+        log(conf_directory.get_current_dir())
         conf_directory.get_file(gateway_link_t).set_address()
+        log(conf_directory.get_current_dir())
 
         conf_directory.goback()
 
@@ -64,6 +86,8 @@ def set_dhcp_server(
     gateway_addr: RTIpv4Address,
     gateway_link_t: str,
 ) -> bool:
+    log("SETTING DHCP SERVER:")
+
     if gateway_addr != None:
         dhcp_server = RTDhcpServer(gateway_addr, gateway_link_t)
         return (
@@ -75,6 +99,7 @@ def set_dhcp_server(
 
 
 def set_firewall() -> bool:
+    log("SETTING FIREWALL:")
     firewall = RTFireWall()
 
     return (
@@ -86,6 +111,7 @@ def set_firewall() -> bool:
 
 def main() -> int:
     cl_parameters = get_cl_parameters()
+    print_cl_parameters(cl_parameters)
 
     if cl_parameters.client_link_t == cl_parameters.gateway_link_t:
         print("link_t cannot be equal!")
@@ -110,6 +136,7 @@ def main() -> int:
         dhcp_client = RTDhcpClient()
 
         if dhcp_client.disable():
+            log("DISABLED DHCP CLIENT")
             success: bool = set_dhcp_server(gateway_addr, cl_parameters.gateway_link_t)
 
             if success:
