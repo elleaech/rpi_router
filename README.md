@@ -27,6 +27,5 @@ sudo python3 rpi_router.py --help
 
 ### Possible changes
 
-- Add new configuration files?
 - Change firewall type?
 - Change dhcp server and client?
