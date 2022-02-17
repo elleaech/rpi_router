@@ -115,6 +115,7 @@ def main() -> int:
 
     if cl_parameters.client_link_t == cl_parameters.gateway_link_t:
         print("link_t cannot be equal!")
+        return -1
 
     try:
         client_addr_network_bytes = int(cl_parameters.client_addr_network_bytes)
