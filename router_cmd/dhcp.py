@@ -28,10 +28,15 @@ class RTDhcpServer:
             return True
 
     def _configure_dhcp_routing(self) -> int:
-        domain_options = "option domain-name 'rpi.local'\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
+        file_name = f"/etc/dhcp/dhcpd.conf"
 
-        with open(f"/etc/dhcp/dhcpd.conf", "a") as dhcp_conf:
-            dhcp_conf.write(f"{domain_options}\n\n\n")
+        with open(file_name, "w") as dhcp_conf:
+            dhcp_conf.write("ddns-update-style none;\n")
+            dhcp_conf.write("default-lease-time 600;\nmax-lease-time 7200;\n")
+
+            domain_options = "option domain-name 'rpi.local';\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
+            dhcp_conf.write(f"{domain_options}\n")
+
             dhcp_conf.write(
                 f"subnet {self._gateway_addr.network} netmask {self._gateway_addr.netmask} "
             )
@@ -47,8 +52,11 @@ class RTDhcpServer:
         dhcp_interface = open(file_name, "r")
 
         new_lines = dhcp_interface.readlines()
-        index = new_lines.index('INTERFACESv4=""\n')
-        new_lines[index] = f'INTERFACESv4="{self._gateway_link_t}"\n'
+
+        for line in new_lines:
+            if line.startswith("INTERFACESv4"):
+                index = new_lines.index(line)
+                new_lines[index] = f'INTERFACESv4="{self._gateway_link_t}"\n'
 
         dhcp_interface.close()
 
