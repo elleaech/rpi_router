@@ -32,7 +32,7 @@ class RTAPIDebian(RTAPIOS):
         super().__init__()
 
     def do(self, command: str) -> int:
-        rc = self._process.run(command, shell=True, capture_outpsut=True)
+        rc = self._process.run(command, shell=True, capture_output=True)
         return rc.returncode
 
     def install(self, package: str) -> int:

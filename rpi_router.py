@@ -31,11 +31,11 @@ def print_cl_parameters(cl_parameters: argparse.Namespace):
 
 
 def log(message):
-    print(message, "\n")
+    print(message)
 
 
 def init_address(addr_network_bytes: int, address_as_str: str):
-    log("SETTING ADDRESS:")
+    log("\nSETTING ADDRESS:")
 
     parsed_address = address_as_str.split(".")
 
@@ -60,7 +60,7 @@ def set_network(
     client_addr: RTIpv4Address,
     gateway_addr: RTIpv4Address,
 ) -> bool:
-    log("SETTING NETWORK INTERFACES:")
+    log("\nSETTING NETWORK INTERFACES:")
 
     if client_addr != None and gateway_addr != None:
         conf_directory = RTPath(Path("/", "etc", "network", "interfaces.d"))
@@ -86,7 +86,7 @@ def set_dhcp_server(
     gateway_addr: RTIpv4Address,
     gateway_link_t: str,
 ) -> bool:
-    log("SETTING DHCP SERVER:")
+    log("\nSETTING DHCP SERVER:")
 
     if gateway_addr != None:
         dhcp_server = RTDhcpServer(gateway_addr, gateway_link_t)
@@ -99,7 +99,7 @@ def set_dhcp_server(
 
 
 def set_firewall() -> bool:
-    log("SETTING FIREWALL:")
+    log("\nSETTING FIREWALL:")
     firewall = RTFireWall()
 
     return (
