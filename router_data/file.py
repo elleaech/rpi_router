@@ -11,6 +11,7 @@ class RTNetFile:
         self._address = f"{self._raw_address.address}"
         self._netmask = f"{self._raw_address.netmask}"
         self._gateway = f"{self._raw_address.gateway}"
+        self._broadcast = f"{self._raw_address.broadcast}"
 
         self._wpa_config = ""
         if has_wpa:
@@ -20,9 +21,10 @@ class RTNetFile:
         with open(f"{self._link_t}", "w") as link_file:
             link_file.write(f"{self._link_config}\n")
             link_file.write(f"{self._interface}\n")
-            link_file.write(f"\t{self._address}\n")
-            link_file.write(f"\t{self._netmask}\n")
-            link_file.write(f"\t{self._gateway}\n")
+            link_file.write(f"\taddress {self._address}\n")
+            link_file.write(f"\tnetmask {self._netmask}\n")
+            link_file.write(f"\tgateway {self._gateway}\n")
+            link_file.write(f"\tbroadcast {self._broadcast}\n")
             link_file.write(f"\t{self._wpa_config}\n")
 
     @property

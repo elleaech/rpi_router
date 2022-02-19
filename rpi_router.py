@@ -91,7 +91,7 @@ def set_dhcp_server(
     if gateway_addr != None:
         dhcp_server = RTDhcpServer(gateway_addr, gateway_link_t)
         return (
-            dhcp_server.install() and dhcp_server.enable() and dhcp_server.configure()
+            dhcp_server.install() and dhcp_server.configure() and dhcp_server.enable()
         )
 
     else:
@@ -136,8 +136,8 @@ def main() -> int:
     if success:
         dhcp_client = RTDhcpClient()
 
+        log("DISABLING DHCP CLIENT:")
         if dhcp_client.disable():
-            log("DISABLED DHCP CLIENT")
             success: bool = set_dhcp_server(gateway_addr, cl_parameters.gateway_link_t)
 
             if success:

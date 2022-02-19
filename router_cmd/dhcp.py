@@ -35,7 +35,7 @@ class RTDhcpServer:
             dhcp_conf.write("ddns-update-style none;\n")
             dhcp_conf.write("default-lease-time 600;\nmax-lease-time 7200;\n")
 
-            domain_options = "option domain-name 'rpi.local';\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
+            domain_options = "option domain-name \"rpi.local\";\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
             dhcp_conf.write(f"{domain_options}\n")
 
             dhcp_conf.write(

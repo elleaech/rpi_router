@@ -33,10 +33,14 @@ class RTAPIDebian(RTAPIOS):
 
     def do(self, command: str) -> int:
         rc = self._process.run(command, shell=True, capture_output=True)
+        print(rc)
         return rc.returncode
 
     def install(self, package: str) -> int:
-        return self.do(f"apt-get -y install {package}")
+        rc = self.do(f"apt-get update")
+        if SUCCESS == rc:
+            return self.do(f"apt-get -y install {package}")
+        return rc
 
     def disable(self, service: str) -> int:
         return self.do(f"systemctl disable {service}")
