@@ -35,13 +35,18 @@ class RTDhcpServer:
             dhcp_conf.write("ddns-update-style none;\n")
             dhcp_conf.write("default-lease-time 600;\nmax-lease-time 7200;\n")
 
-            domain_options = "option domain-name \"rpi.local\";\noption domain-name-servers 8.8.8.8, 8.8.4.4;"
+            domain_options = 'option domain-name "rpi.local";\noption domain-name-servers 8.8.8.8, 8.8.4.4;'
             dhcp_conf.write(f"{domain_options}\n")
 
             dhcp_conf.write(
                 f"subnet {self._gateway_addr.network} netmask {self._gateway_addr.netmask} "
             )
             dhcp_conf.write("{\n")
+
+            start_range = self._gateway_addr.replace_end_byte("2")
+            end_range = self._gateway_addr.replace_end_byte("254")
+            dhcp_conf.write(f"\trange {start_range} {end_range};\n")
+
             dhcp_conf.write(f"\toption routers {self._gateway_addr.gateway};\n")
             dhcp_conf.write(f"\toption subnet-mask {self._gateway_addr.netmask};\n")
             dhcp_conf.write("}\n")

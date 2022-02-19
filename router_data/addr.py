@@ -54,6 +54,12 @@ class RTIpv4Address(RTAddress):
         for index in range(1, (4 - netmask_bytes) + 1):
             self._network_bytes[-index] = "0"
 
+    def replace_end_byte(self, new_end_byte: str) -> str:
+        bytes = self._network_bytes.copy()
+        if new_end_byte >= 0 and new_end_byte < 255:
+            bytes[-1] = new_end_byte
+        return ".".join(bytes)
+
     @property
     def address(self) -> str:
         return ".".join(self._addr_bytes)
