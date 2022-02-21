@@ -27,7 +27,7 @@ sudo python3 rpi_router.py --help
 - `gateway_addr`: internal gateway IP address (that is, Raspberry Pi's address as a gateway)
 - `gateway_addr_network_bytes`: number of bytes to represent Raspberry Pi's network as a gateway
 
-> You may need a reboot for network configurations to be set...
+> You may need to reboot for configurations to be set...
 
 ## Future
 --------------
