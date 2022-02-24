@@ -16,7 +16,7 @@ also allowing different types of interfaces.
 --------------
 
 ``` bash
-sudo python3 rpi_router.py --help
+sudo python3 rpi_island.py --help
 ```
 
 - `client_link_t`: external server connection with Raspberry Pi
