@@ -1,5 +1,5 @@
-from router_cmd.os import RTAPIDebian, SUCCESS
-from router_data.addr import RTIpv4Address
+from .os import RTAPIDebian, SUCCESS
+from ..router_data.addr import RTIpv4Address
 
 
 class RTDhcpServer:

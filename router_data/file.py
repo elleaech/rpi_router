@@ -1,4 +1,4 @@
-from router_data.addr import RTIpv4Address
+from .addr import RTIpv4Address
 
 
 class RTNetFile:

@@ -1,4 +1,4 @@
-from router_cmd.os import RTAPIDebian, SUCCESS
+from .os import RTAPIDebian, SUCCESS
 
 
 class RTFireWall:

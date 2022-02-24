@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from router_data import RTNetFile
+from . import RTNetFile
 
 
 class RTPath:
