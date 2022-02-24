@@ -43,8 +43,8 @@ class RTDhcpServer:
             )
             dhcp_conf.write("{\n")
 
-            start_range = self._gateway_addr.replace_end_byte("2")
-            end_range = self._gateway_addr.replace_end_byte("254")
+            start_range = self._gateway_addr.replace_end_byte(2)
+            end_range = self._gateway_addr.replace_end_byte(254)
             dhcp_conf.write(f"\trange {start_range} {end_range};\n")
 
             dhcp_conf.write(f"\toption routers {self._gateway_addr.gateway};\n")
