@@ -1,7 +1,6 @@
 ## Improvements
 
 - Algorithms
-- Update network configuration on execution time
 
 ### Portings
 
